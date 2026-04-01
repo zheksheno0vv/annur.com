@@ -1,0 +1,26 @@
+services:
+  web:
+    build: .
+    restart: always
+    volumes:
+      - ./media:/app/media
+      - static_volume:/app/staticfiles
+      - ./db.sqlite3:/app/db.sqlite3
+    env_file:
+      - .env
+    expose:
+      - "8000"
+
+  nginx:
+    build: ./nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./media:/app/media
+      - static_volume:/app/staticfiles
+    depends_on:
+      - web
+
+volumes:
+  static_volume:
