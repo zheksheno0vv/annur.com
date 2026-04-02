@@ -11,6 +11,9 @@ urlpatterns = [
     # UserProfile
     path('users/', UserProfileListAPIView.as_view(), name='user_list'),
     path('users/<int:pk>/', UserProfileDetailAPIView.as_view(), name='user_detail'),
+    path('register/', RegisterView.as_view(), name='register'),
+    path('login/', CustomLoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
 
     # Restoran
     path('caffe/', RestoranListAPIView.as_view(), name='caffe_list'),

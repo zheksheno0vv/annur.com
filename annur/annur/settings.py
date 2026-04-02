@@ -9,10 +9,11 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -46,6 +47,8 @@ INSTALLED_APPS = [
     "phonenumber_field",
     'drf_yasg'  ,
     'multiselectfield',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist'
 
 
 ]
@@ -147,4 +150,18 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 #     "welcome_sign": "Добро пожаловать, Билал",
 #     "theme": "darkly",
 # }
+# AUTH_USER_MODEL = 'caffe_app.UserProfile'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',)
+}
 
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=17),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}

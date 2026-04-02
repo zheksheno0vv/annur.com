@@ -1,5 +1,53 @@
 from .models import *
 from rest_framework import serializers
+from rest_framework_simplejwt.tokens import RefreshToken  # Класс для создания access и refresh токенов
+from django.contrib.auth import authenticate  # Функция, которая проверяет логин и пароль
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ('username', 'email','first_name', 'last_name',
+                  'phone_number')  # Указываем, какие поля включить
+        extra_kwargs = {
+            'password': {'write_only': True}}  # Пароль не должен отображаться при выводе данных (пороль не будет видно)
+
+    def create(self, validated_data):  # create авоматически хеширует пороль
+        user = UserProfile.objects.create_user(**validated_data)  # Используем встроенный метод для создания пользователя
+        return user
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()  # Поле для логина
+    password = serializers.CharField(write_only=True)  # Пароль — только на запись (чыгарып бербейт поролду кайра)
+
+    def validate(self, data):
+        user = authenticate(**data)  # Проверка логина и пароля
+        if user and user.is_active:  # Если пользователь найден и активен
+            return user  # Возвращаем объект пользователя
+        raise serializers.ValidationError('Неверные учетные данные')  # Ошибка при неверном логине/пароле
+
+    def to_representation(self, instance):
+        refresh = RefreshToken.for_user(instance)  # Создаём refresh токен
+        return {
+            'user': {
+                'username': instance.username,
+                'email': instance.email,
+            },
+            'access': str(refresh.access_token),  # access токен — для авторизации
+            'refresh': str(refresh),  # refresh токен — для обновления access токена
+        }
+
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+
+    def validate(self, attrs):
+        token = attrs.get('refresh')
+        try:
+            RefreshToken(token)
+        except Exception:
+            raise serializers.ValidationError({"refresh": "Невалидный токен"})
+        return attrs
 
 
 class UserListSerializers(serializers.ModelSerializer):
