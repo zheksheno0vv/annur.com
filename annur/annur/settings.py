@@ -35,7 +35,7 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
 
 INSTALLED_APPS = [
     'modeltranslation',
-    # "jazzmin",
+    "jazzmin",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -48,12 +48,14 @@ INSTALLED_APPS = [
     'drf_yasg'  ,
     'multiselectfield',
     'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist'
+    'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
 
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -62,13 +64,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware'
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
 ]
 
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "https://api.annur.com.kg"
 ]
 
 
@@ -176,6 +177,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 #     "theme": "darkly",
 # }
 # AUTH_USER_MODEL = 'caffe_app.UserProfile'
+
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

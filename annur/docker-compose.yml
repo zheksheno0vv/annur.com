@@ -30,9 +30,10 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Asia/Bishkek
-      - URL=annur.kg
-      - SUBDOMAINS=
+      - URL=annur.com.kg
+      - SUBDOMAINS=api
       - VALIDATION=http
+      - ONLY_SUBDOMAINS=true
       - STAGING=false
     depends_on:
       - web
