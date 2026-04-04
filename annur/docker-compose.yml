@@ -1,26 +1,51 @@
 services:
-  web:
-    build: .
-    restart: always
+  postgres_db:
+    image: postgres:latest
     volumes:
-      - ./media:/app/media
-      - static_volume:/app/staticfiles
-      - ./data:/app/data
+      - postgres_data:/var/lib/postgresql/data/
     env_file:
       - .env
-    expose:
-      - "8000"
-
-  nginx:
-    build: ./nginx
-    restart: always
-    ports:
-      - "80:80"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    container_name: postgres_db
+  web:
+    build: .
     volumes:
-      - ./media:/app/media
-      - static_volume:/app/staticfiles
+      - .:/app
+      - ./static:/core/staticfiles/
+      - ./media:/core/media/
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres_db
+    container_name: web
+    env_file:
+      - .env
+  nginx:
+    image: linuxserver/swag
+    restart: always
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Bishkek
+      - URL=annur.kg
+      - SUBDOMAINS=
+      - VALIDATION=http
+      - STAGING=false
     depends_on:
       - web
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - lets:/config
+      - ./nginx/ssl.conf:/config/nginx/site-confs/ssl/ssl.conf
+      - ./nginx/nginx.conf:/config/nginx/site-confs/default.conf
+      - ./static:/core/static/
+      - ./media:/core/media/
 
 volumes:
-  static_volume:
+  postgres_data:
+  lets:
