@@ -66,18 +66,12 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware'
 ]
 
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "https://api.annur.com.kg"
-]
-
-
 CORS_ALLOW_ALL_ORIGINS = True
-
-
-
 CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = [
+    "https://api.annur.com.kg",
+    "http://localhost:3000"
+]
 
 
 ROOT_URLCONF = 'annur.urls'
