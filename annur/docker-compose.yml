@@ -5,7 +5,7 @@ services:
     volumes:
       - ./media:/app/media
       - static_volume:/app/staticfiles
-      - ./db.sqlite3:/app/db.sqlite3
+      - ./data:/app/data
     env_file:
       - .env
     expose:
