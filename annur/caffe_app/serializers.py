@@ -107,9 +107,11 @@ class ProductImageDetailSerializers(serializers.ModelSerializer):
 
 
 class ProductListSerializers(serializers.ModelSerializer):
+    images = ProductImageListSerializers(many=True, read_only=True)
+
     class Meta:
         model = Product
-        fields = ['id', 'product_name', 'price', 'gram', 'sub_category']
+        fields = ['id', 'product_name', 'price', 'gram', 'sub_category''images']
 
 
 class ProductDetailSerializers(serializers.ModelSerializer):
